@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Ajax Fácil com Javascript Puro</title>
+        <!-- bootstrap - link cdn -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script language="javascript">
+        var httpRequest; //Guardar o objeto xmlhttpRequest
+                    
+        function fazerRequisicao(url, destino){//Criar a função de requisição
+            document.getElementById(destino).innerHTML = '<center><img src="loader.gif"></center>'; //carregar a imagem de load
+                        
+            if(window.XMLHttpRequest){//Se existir o objeto xmlhttpRequest faça...
+                httpRequest = new XMLHttpRequest(); //Instanciar o objeto
+            }else if(window.ActiveXObject){//Senão verificar nos navegadores antigos
+                try{
+                    httpRequest = new ActiveXObject("Msxml2.XMLTTP");
+                }catch(e){
+                    try{
+                        httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                    }catch(e){//Após ultima tentativa sem êxito
+                        alert('Impossível instanciar o objeto xmlhttprequest para este navegador/versão');
+                    }
+                }
+            }
+            //Verificar se a variável foi instanciada
+            if(!httpRequest){
+                alert('Erro ao tentar criar uma instância do objeto XMLHTTPREQUEST');
+                return false;
+            }
+                        
+            httpRequest.onreadystatechange = situacaoRequisicao; //Verificar o estado da requisição                      
+            httpRequest.open('GET', url); //Abrir cabeçalho
+            httpRequest.send();//Disparar requisição
+        }
+                    
+        function situacaoRequisicao(){//verificar o status da requisição
+            if(httpRequest.readyState == 4){//Se a requisição foi concluída...
+                if(httpRequest.status == 200){//Se a o status da requisição foi completado...
+                    document.getElementById('div_conteudo').innerHTML = httpRequest.responseText;//jogar o conteúdo dentro da DIV
+                }
+            }
+        }
+        </script>
+    </head>
+    <body>
+        <!-- Static navbar -->
+	<nav class="navbar navbar-default navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <h3>Ajax Fácil com Javascript Puro</h3>
+                </div>
+            </div>
+	</nav>
+	<div class="container">
+	    <div class="row">
+	    	<div class="col-md-4 center"></div>
+                    <div class="col-md-4 center">
+                        <a href="#" class="btn btn-primary" onclick="fazerRequisicao('pagina_1_conteudo.html', 'div_conteudo')">Página 1</a>
+	    		<a href="#" class="btn btn-primary" onclick="fazerRequisicao('pagina_2_conteudo.html', 'div_conteudo')">Página 2</a>
+	    		<a href="#" class="btn btn-primary" onclick="fazerRequisicao('pagina_3_conteudo.html', 'div_conteudo')">Página 3</a>
+                    </div>
+	    	<div class="col-md-4 center"></div>
+	    </div>
+	    <br />
+	    <div class="row">
+		<div class="col-md-1"></div>
+                <div class="col-md-10" id="div_conteudo"></div><!-- div onde será exibido o conteúdo-->
+		<div class="col-md-1"></div>
+            </div>
+	</div><!-- /container -->	
+    </body>
+</html>
